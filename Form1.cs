@@ -19,7 +19,7 @@ namespace OrganizationProfile
         {
 
             _StudentNo = long.Parse(studNum);
-
+            
             return _StudentNo;
         }
 
@@ -28,6 +28,10 @@ namespace OrganizationProfile
             if (Regex.IsMatch(Contact, @"^[0-9]{10,11}$"))
             {
                 _ContactNo = long.Parse(Contact);
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("The Contact number must be 11 digits only!");
             }
 
             return _ContactNo;
@@ -39,6 +43,10 @@ namespace OrganizationProfile
             {
                 _FullName = LastName + ", " + FirstName + ", " + MiddleInitial;
             }
+            else 
+            {
+                throw new FormatException("Enter a proper name");
+            }
 
             return _FullName;
         }
@@ -48,6 +56,10 @@ namespace OrganizationProfile
             if (Regex.IsMatch(age, @"^[0-9]{1,3}$"))
             {
                 _Age = Int32.Parse(age);
+            }
+            else 
+            {
+                throw new OverflowException("Enter your desired age respectively");
             }
 
             return _Age;
@@ -71,16 +83,35 @@ namespace OrganizationProfile
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            StudentInformationClass.SetFullName = FullName(txtLastName.Text, txtFirstName.Text, txtMiddleInitial.Text);
-            StudentInformationClass.SetStudentNo = StudentNumber(txtStudentNo.Text);
-            StudentInformationClass.SetProgram = cbPrograms.Text;
-            StudentInformationClass.SetGender = cbGender.Text;
-            StudentInformationClass.SetContactNo = ContactNo(txtContactNo.Text);
-            StudentInformationClass.SetAge = Age(txtAge.Text);
-            StudentInformationClass.SetBirthDay = datePickerBirthday.Value.ToString("yyyyMM-dd");
+            try 
+            {
+                StudentInformationClass.SetFullName = FullName(txtLastName.Text, txtFirstName.Text, txtMiddleInitial.Text);
+                StudentInformationClass.SetStudentNo = StudentNumber(txtStudentNo.Text);
+                StudentInformationClass.SetProgram = cbPrograms.Text;
+                StudentInformationClass.SetGender = cbGender.Text;
+                StudentInformationClass.SetContactNo = ContactNo(txtContactNo.Text);
+                StudentInformationClass.SetAge = Age(txtAge.Text);
+                StudentInformationClass.SetBirthDay = datePickerBirthday.Value.ToString("yyyyMM-dd");
 
-            frmConfirmation frm = new frmConfirmation();
-            frm.ShowDialog();
+                frmConfirmation frm = new frmConfirmation();
+                frm.ShowDialog();
+            }
+            catch (ArgumentNullException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (OverflowException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
     }
